@@ -17,7 +17,7 @@ image alloc_img(unsigned int width, unsigned int height)
 void free_img(image img)
 {
     int i;
-    for (i = 0; i < img->width * img->height; i++)
+    for (i = 0; i < (img->width * img->height + 1); i++)
         free(img->buf[i]);
     free(img->buf);
     free(img);
@@ -31,32 +31,30 @@ image read_ppm(FILE * f)
     int b;
 
     if (f == NULL) {
-        perror("Error opening input file.\n");
+        perror("Error opening input file");
         return NULL;
     }
 
     fscanf(f, "%c%d\n", &a, &b);
     fscanf(f, "%u %u\n", &w, &h);
-    printf("%d %d\n", w, h);
     fscanf(f, "%d\n", &b);
 
     fpos_t curr_pos;
     fgetpos(f, &curr_pos);
     fseek (f , SEEK_CUR, SEEK_END);
-    long lSize = ftell (f);
+    long f_size = ftell (f);
     fsetpos(f, &curr_pos);
 
 
-    char* buf = malloc(lSize * sizeof(char));
+    char* buf = malloc(f_size * sizeof(char));
 
     img = alloc_img(w, h);
     if (img != NULL) {
-        size_t rd = fread(buf, 1, lSize, f);
+        size_t rd = fread(buf, 1, f_size, f);
         if (rd < w * h) {
             free_img(img);
             return NULL;
         }
-        //printf("%s\n", buf);
         char *tok = strtok(buf, "\n");
         unsigned int i = 0, j = 0;
         while (tok != NULL)
@@ -65,12 +63,12 @@ image read_ppm(FILE * f)
                 j = 0;
                 i++;
             }
-            printf("%d\n", atoi(tok));
             img->buf[i][j] = atoi(tok);
             tok = strtok(NULL, "\n");
             j++;
             
         }
+        free(buf);
         return img;
     }
     return img;

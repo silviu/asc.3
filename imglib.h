@@ -25,5 +25,7 @@ image read_ppm(FILE *f);
 void write_ppm(FILE * fd, image img);
 
 #define GET_PIXEL(IMG, X, Y) (IMG->buf[ ((Y) * IMG->width + (X)) ])
-#define PPMREADBUFLEN 256
+#define R(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[0])
+#define G(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[1])
+#define B(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[2])
 #endif
