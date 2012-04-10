@@ -23,6 +23,24 @@ void free_img(image img)
     free(img);
 }
 
+image get_random_patch(image img, int patch_w, int patch_h)
+{
+    return NULL;
+}
+
+image get_patch(image img, int patch_w, int patch_h, int x_index, int y_index)
+{
+    int i ,j ;
+    image patch = alloc_img(patch_w, patch_h);
+    for (i = x_index; i < patch_w; i++)
+        for (j = y_index; j < patch_h; j++) {
+            printf("[PATCH] x = %d y = %d act_pos = %d\n", i-x_index, j-y_index, ((j-y_index)*img->width) + i-x_index);
+            //printf("[ IMG ] x = %d y = %d\n", i, j);
+            memcpy(GET_PIXEL(patch, i-x_index, j-y_index), GET_PIXEL(img, i, j), 3* sizeof(unsigned char));
+        }
+    return patch;
+}
+
 image read_ppm(FILE * f)
 {
     image img;
@@ -30,10 +48,6 @@ image read_ppm(FILE * f)
     char a;
     int b;
 
-    if (f == NULL) {
-        perror("Error opening input file");
-        return NULL;
-    }
 
     fscanf(f, "%c%d\n", &a, &b);
     fscanf(f, "%u %u\n", &w, &h);
