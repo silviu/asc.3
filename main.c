@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 	patch_h = 3;
 
 	printf("PATCH SIZES= %d %d\n", patch_w, patch_h);
-	image patch = get_patch(img, patch_w, patch_h, 0, 0);
+	image patch = get_random_patch(img, patch_w, patch_h);
 	int i;
 	for(i = 0; i < patch_w * patch_h; i++)
 		printf("%d %d %d\n", patch->buf[i][0], patch->buf[i][1], patch->buf[i][2]);

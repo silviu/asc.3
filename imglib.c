@@ -1,5 +1,7 @@
 #include "imglib.h"
 #include <string.h>
+#include <time.h>
+
 
 image alloc_img(unsigned int width, unsigned int height)
 {
@@ -23,21 +25,33 @@ void free_img(image img)
     free(img);
 }
 
-image get_random_patch(image img, int patch_w, int patch_h)
-{
-    return NULL;
-}
-
 image get_patch(image img, int patch_w, int patch_h, int x_index, int y_index)
 {
     int i ,j ;
+    printf("HELOOOOOOOOOOOOOO\n");
+    printf("%d %d\n", patch_w, patch_h);
+    printf("%d %d\n", x_index, y_index);
+
     image patch = alloc_img(patch_w, patch_h);
-    for (i = x_index; i < patch_w; i++)
-        for (j = y_index; j < patch_h; j++) {
+    for (i = x_index; i < x_index+patch_w; i++)
+        for (j = y_index; j < y_index+patch_h; j++) {
             printf("[PATCH] x = %d y = %d act_pos = %d\n", i-x_index, j-y_index, ((j-y_index)*img->width) + i-x_index);
-            //printf("[ IMG ] x = %d y = %d\n", i, j);
+            printf("[ IMG ] x = %d y = %d\n", i, j);
             memcpy(GET_PIXEL(patch, i-x_index, j-y_index), GET_PIXEL(img, i, j), 3* sizeof(unsigned char));
         }
+    return patch;
+}
+
+image get_random_patch(image img, int patch_w, int patch_h)
+{
+    srand((unsigned)time(NULL));
+    int max_rand_x = img->width  - patch_w;
+    int max_rand_y = img->height - patch_h;
+
+    int x_index = rand() % max_rand_x;
+    int y_index = rand() % max_rand_y;
+
+    image patch = get_patch(img, patch_w, patch_h, x_index, y_index);
     return patch;
 }
 
