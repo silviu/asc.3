@@ -1,10 +1,12 @@
-build: imglib.c imglib.h main.c
-	gcc -Wall -g main.c imglib.c imglib.h -o main
+DIRS=ppu spu
+include ${CELL_TOP}/buildutils/make.footer
+
+
 run:
-	./main input/caramida.ppm output/caramida.ppm 2 3 8 10 10
+	ppu/ppu_master ppu/input/caramida.ppm ppu/output/caramida.ppm 5 4 8 10 10
 
 gdb:
-	gdb --args ./main input/caramida.ppm output/caramida.ppm 2 3 8 10 10
+	gdb --args ppu/ppu_master ppu/input/caramida.ppm ppu/output/caramida.ppm 5 3 8 10 10
 
 clean:
-	rm -rf *.o main
+	rm -rf *.o ppu/ppu_master
