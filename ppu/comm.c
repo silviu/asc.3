@@ -7,7 +7,7 @@ void *ppu_pthread_function(void *thread_arg)
 
 	if (spe_context_run(arg->ctx, &entry, 0, (void*) arg->id, NULL, NULL) < 0) 
 	{
-		perror("Failed running context");
+		perror("PPU:Failed running context");
 		exit(1);
 	}
 

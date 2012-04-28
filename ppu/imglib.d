@@ -13,4 +13,5 @@ imglib.o imglib.i imglib.lst imglib.d : imglib.c imglib.h /usr/include/stdio.h /
   /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
   /usr/include/alloca.h /usr/include/string.h /usr/include/math.h \
   /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
-  /usr/include/bits/mathcalls.h /usr/include/sys/queue.h
+  /usr/include/bits/mathcalls.h /usr/include/sys/queue.h \
+  $(CELL_TOP)/usr/include/libmisc.h /usr/include/stdint.h

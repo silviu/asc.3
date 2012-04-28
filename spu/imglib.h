@@ -23,8 +23,8 @@ image alloc_img(unsigned int width, unsigned int height);
 void free_img(image);
 image get_patch(image img, int patch_w, int patch_h, int x_index, int y_index);
 image get_random_patch(image img, int patch_w, int patch_h);
-image read_ppm(FILE *f);
-void write_ppm(FILE * fd, image img);
+image read_ppm(char* f_in);
+void write_ppm(char* f_out, image img);
 
 #define GET_PIXEL(IMG, X, Y) (IMG->buf[ ((Y) * IMG->width + (X)) ])
 #define R(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[0])

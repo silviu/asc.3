@@ -28,4 +28,6 @@ imglib.o imglib.i imglib.lst imglib.d : imglib.c imglib.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/time.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/machine/time.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/signal.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/signal.h
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/signal.h \
+  $(CELL_TOP)/usr/spu/include/libmisc.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/stdint.h

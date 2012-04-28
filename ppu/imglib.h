@@ -9,7 +9,13 @@
 #include <sys/queue.h>
 
 // r, g, b
-typedef unsigned char* pixel_t;
+struct pixel_struct {
+	char r;
+	char g;
+	char b;
+};
+
+typedef struct pixel_struct pixel_t;
 
 typedef struct {
     unsigned int width;
@@ -28,8 +34,8 @@ void get_random_patch_indexes(image img, int patch_w, int patch_h, int *ret_x, i
 image read_ppm(char *fis_in);
 void write_ppm(char * fis_out, image img);
 
-#define GET_PIXEL(IMG, X, Y) (IMG->buf[ ((Y) * IMG->width + (X)) ])
-#define R(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[0])
-#define G(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[1])
-#define B(IMG, X, Y) (GET_PIXEL(IMG, X, Y)[2])
+#define GET_PIXEL(IMG, X, Y) (IMG->buf[ ((X) * IMG->height + (Y)) ])
+#define R(IMG, X, Y) (GET_PIXEL(IMG, X, Y).r)
+#define G(IMG, X, Y) (GET_PIXEL(IMG, X, Y).g)
+#define B(IMG, X, Y) (GET_PIXEL(IMG, X, Y).b)
 #endif

@@ -21,6 +21,7 @@ void get_patch_info(int *patch_w, int *patch_h, int *patch_no, pixel_t** output_
 	//get start of my zone
 	while (spu_stat_in_mbox()<=0);
 	*output_zone_start = (pixel_t*)spu_read_in_mbox();
+
 }
 
 void dma_get_patch_from_ppu(image patch)
@@ -32,9 +33,10 @@ void dma_get_patch_from_ppu(image patch)
 	uint32_t tag_id = mfc_tag_reserve();
 	if (tag_id==MFC_TAG_INVALID) {
 		printf("SPU: ERROR can't allocate tag ID\n"); 
-		return NULL;
+		return;
 	}
-	//printf("ZONE START: %p %p\n", zone_start, patch->buf);
+	printf("ZONE START: %p\n", zone_start);
+	printf("PATCH->BUF: %p\n", patch->buf);
 	mfc_get((void *)(patch->buf), (void*)zone_start, (uint32_t)patch->width * patch->height * 3 *sizeof(unsigned char), tag_id, 0, 0);
 	waitag(tag_id);
 }
@@ -54,7 +56,7 @@ int main(unsigned long long speid, unsigned long long argp, unsigned long long e
 
 	image patch = alloc_img(patch_w, patch_h);
 	printf("SPU %d: PATCH ADDRESS: %p\n", id, patch);
-	dma_get_patch_from_ppu(patch);
+	//dma_get_patch_from_ppu(patch);
 	free_img(patch);
 
 	return 0;

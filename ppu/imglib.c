@@ -1,16 +1,14 @@
 #include "imglib.h"
 #include <string.h>
 #include <time.h>
+#include <libmisc.h>
 
 
 image alloc_img(unsigned int width, unsigned int height)
 {
-    unsigned int i;
     image img;
-    img = malloc(sizeof (image_t));
-    img->buf = malloc((width * height + 1) * sizeof (pixel_t));
-    for (i = 0; i < (width * height + 1); i++)
-        img->buf[i] = malloc(3 * sizeof(char));
+    img = malloc_align(sizeof (image_t), 4);
+    img->buf = malloc_align((width * height + 1) * sizeof (pixel_t), 4);
     img->width = width;
     img->height = height;
     return img;
@@ -18,11 +16,8 @@ image alloc_img(unsigned int width, unsigned int height)
 
 void free_img(image img)
 {
-    unsigned int i;
-    for (i = 0; i < (img->width * img->height + 1); i++)
-        free(img->buf[i]);
-    free(img->buf);
-    free(img);
+    free_align(img->buf);
+    free_align(img);
 }
 
 void apply_patch(image img_src, image img_dst, int x_index, int y_index, int patch_w, int patch_h)
@@ -30,7 +25,7 @@ void apply_patch(image img_src, image img_dst, int x_index, int y_index, int pat
     int i, j;
     for (i = 0; i < patch_w; i++)
         for (j = 0; j < patch_h; j++)
-            memcpy(GET_PIXEL(img_dst, j+x_index, i+y_index), GET_PIXEL(img_src, i, j), 3 * sizeof(unsigned char));
+            memcpy(&GET_PIXEL(img_dst, j+x_index, i+y_index), &GET_PIXEL(img_src, i, j), 3 * sizeof(unsigned char));
 }
 
 image get_patch(image img, int x_index, int y_index, int patch_w, int patch_h)
@@ -44,7 +39,7 @@ image get_patch(image img, int x_index, int y_index, int patch_w, int patch_h)
         for (j = y_index; j < y_index+patch_h; j++) {
             //printf("[PATCH] x = %d y = %d\n", i-x_index, j-y_index);
             //printf("[ IMG ] x = %d y = %d\n", i, j);
-            memcpy(GET_PIXEL(patch, i-x_index, j-y_index), GET_PIXEL(img, i, j), 3* sizeof(unsigned char));
+            memcpy(&GET_PIXEL(patch, i-x_index, j-y_index), &GET_PIXEL(img, i, j), 3* sizeof(unsigned char));
         }
     return patch;
 }
@@ -111,7 +106,12 @@ image read_ppm(char* fis_in)
                 j = 0;
                 i++;
             }
-            img->buf[i][j] = atoi(tok);
+            if (j % 3 == 0)
+                img->buf[i].r = atoi(tok);
+            else if (j % 3 == 1)
+                img->buf[i].g = atoi(tok);
+            else
+                img->buf[i].b = atoi(tok);
             tok = strtok(NULL, "\n");
             j++;
             

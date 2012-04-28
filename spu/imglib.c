@@ -1,16 +1,17 @@
 #include "imglib.h"
 #include <string.h>
 #include <time.h>
+#include <libmisc.h>
 
 
 image alloc_img(unsigned int width, unsigned int height)
 {
     unsigned int i;
     image img;
-    img = malloc(sizeof (image_t));
-    img->buf = malloc((width * height + 1) * sizeof (pixel_t));
+    img = malloc_align(sizeof (image_t), 7);
+    img->buf = malloc_align((width * height + 1) * sizeof (pixel_t), 7);
     for (i = 0; i < (width * height + 1); i++)
-        img->buf[i] = malloc(3 * sizeof(char));
+        img->buf[i] = malloc_align(3 * sizeof(unsigned char), 7);
     img->width = width;
     img->height = height;
     return img;
@@ -20,9 +21,17 @@ void free_img(image img)
 {
     unsigned int i;
     for (i = 0; i < (img->width * img->height + 1); i++)
-        free(img->buf[i]);
-    free(img->buf);
-    free(img);
+        free_align(img->buf[i]);
+    free_align(img->buf);
+    free_align(img);
+}
+
+void apply_patch(image img_src, image img_dst, int x_index, int y_index, int patch_w, int patch_h)
+{
+    int i, j;
+    for (i = 0; i < patch_w; i++)
+        for (j = 0; j < patch_h; j++)
+            memcpy(GET_PIXEL(img_dst, j+x_index, i+y_index), GET_PIXEL(img_src, i, j), 3 * sizeof(unsigned char));
 }
 
 image get_patch(image img, int x_index, int y_index, int patch_w, int patch_h)
@@ -41,7 +50,7 @@ image get_patch(image img, int x_index, int y_index, int patch_w, int patch_h)
     return patch;
 }
 
-image get_random_patch(image img, int patch_w, int patch_h)
+void get_random_patch_indexes(image img, int patch_w, int patch_h, int *ret_x, int *ret_y)
 {
     int max_rand_x = img->width  - patch_w;
     int max_rand_y = img->height - patch_h;
@@ -49,19 +58,30 @@ image get_random_patch(image img, int patch_w, int patch_h)
     int x_index = rand() % max_rand_x;
     int y_index = rand() % max_rand_y;
 
-    printf("X_RAND=%d Y_RAND%d\n", x_index, y_index);
+    *ret_x = x_index;
+    *ret_y = y_index;
+}
 
+image get_random_patch(image img, int patch_w, int patch_h)
+{
+    int x_index, y_index;
+    get_random_patch_indexes(img, patch_w, patch_h, &x_index, &y_index);
     image patch = get_patch(img, x_index, y_index, patch_w, patch_h);
     return patch;
 }
 
-image read_ppm(FILE * f)
+image read_ppm(char* fis_in)
 {
     image img;
     unsigned int w, h;
     char a;
     int b;
 
+    FILE *f = fopen(fis_in, "r");
+    if (f == NULL) {
+        perror("Error opening input file");
+        return NULL;
+    }
 
     fscanf(f, "%c%d\n", &a, &b);
     fscanf(f, "%u %u\n", &w, &h);
@@ -81,6 +101,7 @@ image read_ppm(FILE * f)
         size_t rd = fread(buf, 1, f_size, f);
         if (rd < w * h) {
             free_img(img);
+            fclose(f);
             return NULL;
         }
         char *tok = strtok(buf, "\n");
@@ -97,20 +118,28 @@ image read_ppm(FILE * f)
             
         }
         free(buf);
+        fclose(f);
         return img;
     }
+    fclose(f);
     return img;
 }
 
-void
-write_ppm(FILE * fd, image img) {
+void write_ppm(char *fis_out, image img) 
+{
+    FILE *f = fopen(fis_out, "w");
+    if (f == NULL) {
+        perror("Error opening input file");
+        return;
+    }
+
     unsigned int i, j;
-    (void) fprintf(fd, "P3\n%d %d\n255\n", img->width, img->height);
+    (void) fprintf(f, "P3\n%d %d\n255\n", img->width, img->height);
     for (i = 0; i < img->width; i++)
         for (j = 0; j < img->height; j++) {
-            fprintf(fd, "%d\n", R(img, i, j));
-            fprintf(fd, "%d\n", G(img, i, j));
-            fprintf(fd, "%d\n", B(img, i, j));
-
+            fprintf(f, "%d\n", R(img, i, j));
+            fprintf(f, "%d\n", G(img, i, j));
+            fprintf(f, "%d\n", B(img, i, j));
         }
+    fclose(f);
 }
