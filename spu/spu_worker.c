@@ -52,7 +52,7 @@ void get_patch_info(int *patch_w, int *patch_h, int *patch_no, int *total_nr_pat
 	*overlap_size = (int)spu_read_in_mbox();
 
 	int i;
-	*ppu_min_borders_adress = malloc_align((*patch_no) * sizeof (int*), 4);
+	*ppu_min_borders_adress = malloc_align((*patch_no - 1) * sizeof (int*), 4);
 	//printf("GETTING %d\n", *patch_no-1);
 	for (i = 0; i < ((*patch_no)-1); i++) {
 		while (spu_stat_in_mbox()<=0);
