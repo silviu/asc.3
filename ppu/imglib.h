@@ -9,13 +9,13 @@
 #include <sys/queue.h>
 
 // r, g, b
-struct pixel_struct {
+struct pixel_t{
 	char r;
 	char g;
 	char b;
 };
 
-typedef struct pixel_struct pixel_t;
+typedef struct pixel_t pixel_t;
 
 typedef struct {
     unsigned int width;
@@ -27,10 +27,6 @@ typedef image_t *image;
 
 image alloc_img(unsigned int width, unsigned int height);
 void free_img(image);
-void apply_patch(image img_src, image img_dst, int x_index, int y_index, int patch_w, int patch_h);
-image get_patch(image img, int patch_w, int patch_h, int x_index, int y_index);
-image get_random_patch(image img, int patch_w, int patch_h);
-void get_random_patch_indexes(image img, int patch_w, int patch_h, int *ret_x, int *ret_y);
 image read_ppm(char *fis_in);
 void write_ppm(char * fis_out, image img);
 

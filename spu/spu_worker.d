@@ -20,12 +20,14 @@ spu_worker.o spu_worker.i spu_worker.lst spu_worker.d : spu_worker.c \
   /usr/lib/gcc/spu/4.1.1/include/spu_mfcio.h \
   /usr/lib/gcc/spu/4.1.1/include/spu_intrinsics.h \
   /usr/lib/gcc/spu/4.1.1/include/spu_internals.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/stdint.h imglib.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/stdint.h \
+  $(CELL_TOP)/usr/spu/include/libmisc.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/stdlib.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/machine/stdlib.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/alloca.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/time.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/machine/time.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/signal.h \
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/signal.h \
   /usr/lib/gcc/spu/4.1.1/../../../../spu/include/string.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/string.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/math.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/queue.h \
-  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/machine/ansi.h
+  /usr/lib/gcc/spu/4.1.1/../../../../spu/include/sys/string.h
